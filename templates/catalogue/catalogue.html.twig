@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <table class="table table-striped">
+        <thead>
+        {% if user.role == 'ROLE_ADMIN' %}
+        <tr><th scope="row" class="col-24">  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">
+                    Ajout Ouvrage
+                </button></th></tr>
+        {% endif %}
+            <tr>
+                <th scope="col" class="col-1">{{ knp_pagination_sortable(ouvrages, 'Numero','o.Numero') }}</th>
+                <th scope="col" class="col-2">{{ knp_pagination_sortable(ouvrages, 'Titre','o.Titre') }}</th>
+                <th scope="col" class="col-2">{{ knp_pagination_sortable(ouvrages, 'Theme','o.Theme_id') }}</th>
+                <th scope="col" class="col-3">Auteur</th>
+                <th scope="col" class="col-4">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ouvrage in ouvrages %}
+                <tr>
+                    {% if user.role != 'ROLE_ADMIN' %}
+                    <th scope="row">{{ ouvrage.numero }}</th>
+                    <td>{{ ouvrage.titre }}</td>
+                    <td>{% if ouvrage.themeId is null %}{{null}}{% else %}{{ ouvrage.themeId.libelle }}{% endif %}</td>
+                    <td>{% if ouvrage.auteurId is null %}{{null}}{% else %}{{ ouvrage.auteurId.libelle }}{% endif %} </td>
+                    {% endif %}
+                    {% if user.role == 'ROLE_ADMIN' %}
+                        <td scope="row"><input type = "text" value="{{ ouvrage.numero }}" disabled="disabled" id="num{{ ouvrage.id}}" class="show_input"> </td>
+                        <td scope="row"><input type = "text" value="{{ ouvrage.titre }}" disabled="disabled" id="titre{{ ouvrage.id}}" class="show_input"> </td>
+                        <td scope="row">
+                            <select disabled="disabled" id="theme{{ ouvrage.id}}" class="show_input">
+                                <option value="{% if ouvrage.themeId is null %}{{null}}{% else %}{{ ouvrage.themeId.id }}{% endif %}">{% if ouvrage.themeId is null %}{{null}}{% else %}{{ ouvrage.themeId.libelle }}{% endif %}</option>
+                                    {% for themes in theme %}
+                                <option value="{{ themes.id }}">{{ themes.libelle }}</option>
+                                    {% endfor %}
+
+                            </select>
+                        </td>
+                        <td scope="row"> <select disabled="disabled" id="auteur{{ ouvrage.id}}" class="show_input">
+                                <option value="{% if ouvrage.auteurId is null %}{{null}}{% else %}{{ ouvrage.auteurId.id }}{% endif %}">{% if ouvrage.auteurId is null %}{{null}}{% else %}{{ ouvrage.auteurId.libelle }}{% endif %}</option>
+                                {% for auteurs in auteur %}
+                                    <option value="{{ auteurs.id }}">{{ auteurs.libelle }}</option>
+                                {% endfor %}
+
+                            </select>
+                        <td>
+                            <button type="button" class="btn btn-secondary" id="btn_update{{ ouvrage.id }}" onclick="unlock({{ ouvrage.id }});">
+                                Modifier
+                            </button>
+
+                            <button type="button" class="btn btn-danger" id="btn_del{{ ouvrage.id }}" onclick="suppression({{ ouvrage.id }});">
+                                Supprimer
+                            </button>
+
+                            <button type="button" class="btn btn-secondary hide" id="btn_cancel{{ ouvrage.id }}" onclick="lock({{ ouvrage.id }});">
+                                Annuler
+                            </button>
+                            <button type="button" class="btn btn-primary hide" id="btn_valid{{ ouvrage.id }}" onclick="modif({{ ouvrage.id }});">
+                                Valider
+                            </button>
+                        </td>
+                    {% endif %}
+                </tr>
+
+            {% endfor %}
+            <td>
+                {{ knp_pagination_render(ouvrages) }}
+            </td>
+        </tbody>
+    </table>
+    </table>
+    {% if user.role == 'ROLE_ADMIN' %}
+
+        <!-- modal ajout-->
+
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ajout</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {{ form_start(forms) }}
+                    <div class="modal-body">
+
+                        {{ form_rest(forms) }}
+
+                        <button class="btn btn-primary">Confirmer</button>
+                        {{ form_end(forms) }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(".show_input").attr("disabled",true);
+    </script>
+    <script src="{{ asset('JS/indexOuvrage.js') }}"></script>
+{% endblock %}

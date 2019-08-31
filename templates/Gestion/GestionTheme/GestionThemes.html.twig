@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <table class="table table-bordered table-striped">
+        <thead>
+        {% if user.role == 'ROLE_ADMIN' %}
+            <tr><th scope="row" class="col-24">  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">
+                        Ajout Theme
+                    </button></th></tr>
+        {% endif %}
+        <tr>
+            <th scope="col">Theme</th>
+            {% if user.role == 'ROLE_ADMIN' %}
+                <th scope="col">Action</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for theme in themes %}
+            <tr>
+                {% if user.role != 'ROLE_ADMIN' %}
+                    <td scope="row">{{ theme.libelle}}</td>
+                {% endif %}
+                {% if user.role == 'ROLE_ADMIN' %}
+                    <td scope="row"><input type = "text" value="{{ theme.libelle}}" disabled="disabled" id="lib{{ theme.id}}" class="show_input"> </td>
+                    <td>
+                        <button type="button" class="btn btn-secondary" id="btn_update{{ theme.id }}" onclick="unlock({{ theme.id }});">
+                            Modifier
+                        </button>
+
+                        <button type="button" class="btn btn-danger" id="btn_del{{ theme.id }}" onclick="suppression({{ theme.id }});">
+                            Supprimer
+                        </button>
+
+                        <button type="button" class="btn btn-secondary hide" id="btn_cancel{{ theme.id }}" onclick="lock({{ theme.id }});">
+                            Annuler
+                        </button>
+                        <button type="button" class="btn btn-primary hide" id="btn_valid{{ theme.id }}" onclick="modif({{ theme.id }});">
+                            Valider
+                        </button>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if user.role == 'ROLE_ADMIN' %}
+        <!-- modal ajout-->
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ajout</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {{ form_start(forms) }}
+                    <div class="modal-body">
+
+                        {{ form_rest(forms) }}
+
+                        <button class="btn btn-primary">Confirmer</button>
+                        {{ form_end(forms) }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(".show_input").attr("disabled",true);
+    </script>
+    <script src="{{ asset('JS/index.js') }}"></script>
+{% endblock %}

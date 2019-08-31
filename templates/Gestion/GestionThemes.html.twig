@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Theme</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for theme in themes %}
+            <tr>
+                <td scope="row">{{ theme.libelle }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

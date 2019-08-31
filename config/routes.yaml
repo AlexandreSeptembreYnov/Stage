@@ -1,0 +1,33 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+catalogue:
+    path: /catalogue
+    controller: App\Controller\CatalogueController::index
+catalogue.del:
+    path: /catalogue_del
+    controller: App\Controller\CatalogueController::del
+catalogue.edit:
+    path: /catalogue_edit
+    controller: App\Controller\CatalogueController::edit
+home:
+    path: /
+    controller: App\Controller\HomeController::index
+Gestion.Auteurs.index :
+    path: /gestionAuteurs
+    controller: App\Controller\GestionAuteursController::index
+Gestion.Auteurs.del:
+    path: /gestionAuteurs_del
+    controller: App\Controller\GestionAuteursController::del
+Gestion.Auteurs.edit :
+    path: /gestionAuteurs_edit
+    controller: App\Controller\GestionAuteursController::edit
+Gestion.Themes.index :
+    path: /gestionThemes
+    controller: App\Controller\GestionThemesController::index
+Gestion.Themes.del:
+    path: /gestionThemes_del
+    controller: App\Controller\GestionThemesController::del
+Gestion.Themes.edit :
+    path: /gestionThemes_edit
+    controller: App\Controller\GestionThemesController::edit

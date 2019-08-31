@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <table class="table table-striped">
+        <thead>
+        {% if user.role == 'ROLE_ADMIN' %}
+            <tr><th scope="row" class="col-24">  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">
+                        Ajout Auteur
+                    </button></th></tr>
+        {% endif %}
+        <tr>
+            <th scope="col">Auteur</th>
+            {% if user.role == 'ROLE_ADMIN' %}
+            <th scope="col">Action</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for auteur in auteurs %}
+            <tr>
+                {% if user.role != 'ROLE_ADMIN' %}
+                    <td scope="row">{{ auteur.libelle}}</td>
+                {% endif %}
+                {% if user.role == 'ROLE_ADMIN' %}
+                    <td scope="row"><input type = "text" value="{{ auteur.libelle}}" disabled="disabled" id="lib{{ auteur.id}}" class="show_input"> </td>
+                <td>
+                    <button type="button" class="btn btn-secondary" id="btn_update{{ auteur.id }}" onclick="unlock({{ auteur.id }});">
+                        Modifier
+                    </button>
+
+                    <button type="button" class="btn btn-danger" id="btn_del{{ auteur.id }}" onclick="suppression({{ auteur.id }});">
+                        Supprimer
+                    </button>
+
+                    <button type="button" class="btn btn-secondary hide" id="btn_cancel{{ auteur.id }}" onclick="lock({{ auteur.id }});">
+                        Annuler
+                    </button>
+                    <button type="button" class="btn btn-primary hide" id="btn_valid{{ auteur.id }}" onclick="modif({{ auteur.id }});">
+                        Valider
+                    </button>
+                </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if user.role == 'ROLE_ADMIN' %}
+    <!-- modal ajout-->
+
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ajout</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {{ form_start(forms) }}
+            <div class="modal-body">
+
+                {{ form_rest(forms) }}
+
+                <button class="btn btn-primary">Confirmer</button>
+                {{ form_end(forms) }}
+            </div>
+
+        </div>
+    </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+$(".show_input").attr("disabled",true);
+    </script>
+    <script src="{{ asset('JS/indexAuteur.js') }}"></script>
+{% endblock %}
